@@ -1,7 +1,7 @@
 require 'fileutils'
 
 BUILD_DIR = "./build"
-APP_NAME  = "Ginger"
+APP_NAME  = "Cassandra"
 COMPILER  = "valac"
 
 CC = "#{COMPILER} -o #{BUILD_DIR}/#{APP_NAME} "

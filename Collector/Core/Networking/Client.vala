@@ -7,14 +7,14 @@ namespace Collector.Core.Networking {
         private string[] _relays;
 
         public Client(string[] relays) {
-            _relays = IdentifyRelays(relays);
+            _relays = identify_relays(relays);
         }
 
         /**
          * Ping each relay if we get the response, we are
          * expecting, update _relays.
          */
-        public string[] IdentifyRelays(string[] relays) {
+        public string[] identify_relays(string[] relays) {
             string[]  goodrelays = {};
             return goodrelays;
         }
