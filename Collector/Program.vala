@@ -4,8 +4,8 @@ using Collector.Core.Networking.RPCClient;
 
 static int main(string[] args) {
 
-    JsonRPCClient a = new JsonRPCClient("http://test");
+    JsonRPCClient a = new JsonRPCClient("http://127.0.0.1:9292");
 
-    a.request("test", {"a", "b"});
+    a.request("abc", {"a", "b"});
     return 0;
 }

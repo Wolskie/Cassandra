@@ -27,6 +27,14 @@ namespace Collector.Core.Networking.RPCClient {
             this.password = password;
         }
 
+        /**
+         * build_json
+         * 
+         * Build jsonrpc json string
+         *
+         * @param method        method to use
+         * @param parameters    method paramaters
+         */
         private string build_json(string method, string[] parameters) {
 
             // Increase the request_id by one every
@@ -64,25 +72,66 @@ namespace Collector.Core.Networking.RPCClient {
 
         }
 
-        public string request(string method, string[] parameters) {
+        /**
+         * request
+         *
+         * Send jsontpc request
+         *
+         * @param method        Method to call
+         * @param parameters    Method parameters
+         */
+        public string request(string method, string[] parameters)
+        {
 
             size_t length;
             string response;
+            Soup.Logger logger;
 
             // Create the JSON string
             string request = build_json(method, parameters);
 
             if(CSettings.DEBUG) {
-                stdout.puts("RPCClient::request(): request=" + request);
+                logger = new Soup.Logger(Soup.LoggerLogLevel.BODY, -1);
+            } else {
+                logger = new Soup.Logger(Soup.LoggerLogLevel.NONE, -1);
             }
 
             try {
                 Soup.Message msg = new Soup.Message("POST", this.endpoint);
+                Soup.Session session = new Soup.Session();
+
+                // Add logger depending on config
+                session.add_feature(logger);
+
+                // Add the headers object
+                Soup.MessageHeaders headers = new Soup.MessageHeaders(
+                        Soup.MessageHeadersType.REQUEST);
+
+                // Create body and append json data
+                Soup.MessageBody body = new Soup.MessageBody();
+                body.append_take(request.data);
+
+                // Set request headers for authentication
+                headers.append("Content-Type", "application/json");
+                headers.append("X-RPC-Auth-Username", this.username);
+                headers.append("X-RPC-Auth-Password", this.password);
+
+                // Apply the body and headers
+                // to the message
+                msg.request_headers = headers;
+                msg.request_body = body;
+
+                // Send the request
+                session.send_message(msg);
+
+                // Response from the relay
+                response = (string)msg.response_body.flatten().data;
 
             } catch (Error e) {
+                stdout.puts("RPCClient::request(): error=" + e.message);
             }
 
-            return "";
+            return response;
 
         }
 
