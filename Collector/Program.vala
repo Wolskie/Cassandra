@@ -1,11 +1,13 @@
-using Collector.Config;
+using Collector.Settings;
 using Collector.Core.Commands;
 using Collector.Core.Networking.RPCClient;
 
 static int main(string[] args) {
+    Config.init();
 
-    JsonRPCClient a = new JsonRPCClient("http://127.0.0.1:9292");
+    PingCommand p = new PingCommand("http://127.0.0.1:8999");
+    p.execute();
 
-    a.request("abc", {"a", "b"});
+
     return 0;
 }

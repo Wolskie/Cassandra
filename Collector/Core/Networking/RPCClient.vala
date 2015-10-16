@@ -1,5 +1,5 @@
 
-using Collector.Config;
+using Collector.Settings;
 
 namespace Collector.Core.Networking.RPCClient {
     using Soup;
@@ -52,12 +52,18 @@ namespace Collector.Core.Networking.RPCClient {
             builder.set_member_name("method");
             builder.add_string_value(method);
 
-            builder.set_member_name("params");
-            builder.begin_array();
-            foreach(var p in parameters) {
-                builder.add_string_value(p);
+
+            if (parameters != null) { 
+
+                builder.set_member_name("params");
+                builder.begin_array();
+
+                foreach(var p in parameters) {
+                    builder.add_string_value(p);
+                }
+
+                builder.end_array();
             }
-            builder.end_array();
 
             builder.set_member_name("id");
             builder.add_int_value(request_id);
@@ -90,7 +96,7 @@ namespace Collector.Core.Networking.RPCClient {
             // Create the JSON string
             string request = build_json(method, parameters);
 
-            if(CSettings.DEBUG) {
+            if(Config.DEBUG) {
                 logger = new Soup.Logger(Soup.LoggerLogLevel.BODY, -1);
             } else {
                 logger = new Soup.Logger(Soup.LoggerLogLevel.NONE, -1);
@@ -125,7 +131,7 @@ namespace Collector.Core.Networking.RPCClient {
                 session.send_message(msg);
 
                 // Response from the relay
-                response = (string)msg.response_body.flatten().data;
+                response = (string) msg.response_body.flatten().data;
 
             } catch (Error e) {
                 stdout.puts("RPCClient::request(): error=" + e.message);
@@ -150,6 +156,5 @@ namespace Collector.Core.Networking.RPCClient {
             this.endpoint  = endpoint;
             this.request_id = Random.int_range(0,100000);
         }
-
     }
 }

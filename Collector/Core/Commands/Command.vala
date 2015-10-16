@@ -1,5 +1,5 @@
 
-using Collector.Config;
+using Collector.Settings;
 
 namespace Collector.Core.Commands {
 

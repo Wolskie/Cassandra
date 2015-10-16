@@ -4,7 +4,12 @@ BUILD_DIR = "./build"
 APP_NAME  = "Cassandra"
 COMPILER  = "valac"
 
-CC = "#{COMPILER} -o #{BUILD_DIR}/#{APP_NAME} "
+DEBUG     = "--debug"
+RELEASE   = "--disable-assert -v --Xcc=-O3"
+CFLAGS    = "--thread -v"
+
+CC_DEBUG   = "#{COMPILER} #{DEBUG}   #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "
+CC_RELEASE = "#{COMPILER} #{RELEASE} #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "
 
 # When compiling th`ese
 # get included in the command
@@ -65,7 +70,7 @@ namespace :build do
             Dir.mkdir(BUILD_DIR)
         end
 
-         cmd = CC << @pkgs << @src
+         cmd = CC_DEBUG << @pkgs << @src
 
          puts cmd; exec cmd
 

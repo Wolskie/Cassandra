@@ -1,8 +1,8 @@
-namespace Collector.Config {
+namespace Collector.Settings {
 
-    public class CSettings {
+    public class Config {
 
-        public static string VERSION  = "0.0.0";
+        public static double VERSION  = 0.0;
         public static bool   DEBUG    = true;
 
         public static string DEFAULT_RELAY = "127.0.0.1:9292";
@@ -10,6 +10,10 @@ namespace Collector.Config {
 
         public static string USERNAME = "binaca";
         public static string PASSWORD = "ahY7^4sCd0(922ssDDsss)a";
+
+        public static void init() {
+            new Config();
+        }
 
     }
 
