@@ -2,6 +2,11 @@ using Collector.Settings;
 using Collector.Core.Networking.RPCClient;
 
 namespace Collector.Core.Commands {
+
+    using Soup;
+    using Json;
+    using Gee;
+
     class PingCommand : Command {
 
         public string relay   { get; set; }
@@ -15,9 +20,13 @@ namespace Collector.Core.Commands {
             this.client.authenticate(Config.USERNAME, Config.PASSWORD);
         }
 
-        public void execute() {
+        public override void handle_response() {
+            this.executed = true;
+        }
 
-            string response = this.client.request("ping", {});
+        public override void execute() {
+
+            Json.Node response = this.client.request("ping", {});
             this.executed = true;
         }
     }

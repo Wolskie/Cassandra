@@ -78,6 +78,25 @@ namespace Collector.Core.Networking.RPCClient {
 
         }
 
+        public Json.Node parse_json(string data)  {
+            // Parse
+            Json.Parser parser;
+            Json.Node node = null;;
+
+            try {
+                parser = new Json.Parser();
+                parser.load_from_data (data);
+
+                // Get the root node:
+                node = parser.get_root ();
+
+            } catch (Error e) {
+                stdout.printf ("Unable to parse the string: %s\n", e.message);
+            }
+
+            return node;
+        }
+
         /**
          * request
          *
@@ -86,11 +105,12 @@ namespace Collector.Core.Networking.RPCClient {
          * @param method        Method to call
          * @param parameters    Method parameters
          */
-        public string request(string method, string[] parameters)
+        public Json.Node request(string method, string[] parameters)
         {
 
             size_t length;
-            string response;
+            string response = "{}";
+
             Soup.Logger logger;
 
             // Create the JSON string
@@ -133,13 +153,16 @@ namespace Collector.Core.Networking.RPCClient {
                 // Response from the relay
                 response = (string) msg.response_body.flatten().data;
 
+
             } catch (Error e) {
                 stdout.puts("RPCClient::request(): error=" + e.message);
             }
 
-            return response;
+            return parse_json(response);
 
         }
+
+        
 
         /**
          * JsonRPCClient
