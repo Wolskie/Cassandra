@@ -78,23 +78,23 @@ namespace Collector.Core.Networking.RPCClient {
 
         }
 
-        public Json.Node parse_json(string data)  {
+        public Json.Object parse_json(string data)  {
             // Parse
             Json.Parser parser;
-            Json.Node node = null;;
+            Json.Object root = null;
 
             try {
                 parser = new Json.Parser();
                 parser.load_from_data (data);
 
                 // Get the root node:
-                node = parser.get_root ();
+                root = parser.get_root().get_object();
 
             } catch (Error e) {
                 stdout.printf ("Unable to parse the string: %s\n", e.message);
             }
 
-            return node;
+            return root;
         }
 
         /**
@@ -105,16 +105,18 @@ namespace Collector.Core.Networking.RPCClient {
          * @param method        Method to call
          * @param parameters    Method parameters
          */
-        public Json.Node request(string method, string[] parameters)
+        public Json.Object request(string method, string[] parameters)
         {
 
             size_t length;
-            string response = "{}";
+            string http_response = "{}";
 
             Soup.Logger logger;
 
             // Create the JSON string
             string request = build_json(method, parameters);
+
+            string response = "{}";
 
             if(Config.DEBUG) {
                 logger = new Soup.Logger(Soup.LoggerLogLevel.BODY, -1);
@@ -159,7 +161,7 @@ namespace Collector.Core.Networking.RPCClient {
             }
 
             return parse_json(response);
-
+            
         }
 
         

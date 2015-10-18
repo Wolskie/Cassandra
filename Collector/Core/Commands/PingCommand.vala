@@ -20,14 +20,27 @@ namespace Collector.Core.Commands {
             this.client.authenticate(Config.USERNAME, Config.PASSWORD);
         }
 
-        public override void handle_response() {
+        /**
+         * handle_response
+         *
+         * Takes the response json from the RPCClient
+         * and performs the command with the results.
+         *
+         * @param response  response json from the rpclcient
+         */
+        public override void handle_response(Json.Object response) {
+            string result = response.get_string_member("result");
+
+            if(result.up() == "PONG") {
+                this.success = true;
+            }
+
             this.executed = true;
         }
 
         public override void execute() {
-
-            Json.Node response = this.client.request("ping", {});
-            this.executed = true;
+            Json.Object response = this.client.request("ping", {});
+            handle_response(response);
         }
     }
 }
