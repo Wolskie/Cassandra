@@ -5,7 +5,7 @@ APP_NAME  = "Cassandra"
 COMPILER  = "valac"
 
 DEBUG     = "--debug"
-RELEASE   = "--disable-assert -v -X -s"
+RELEASE   = "--disable-assert -v -X -s -X -O3"
 CFLAGS    = "--thread -v "
 
 
@@ -39,12 +39,60 @@ end
 
 task :clean do
 
+    delete_temp_files()
+
     # Remove the build directory
     # as we dont need it anymore.
     #
     if Dir.exists? BUILD_DIR then
         FileUtils.rm_rf(BUILD_DIR);
     end
+
+end
+
+namespace :build do
+    task :debug do
+        exec(make_build_command(:debug))
+    end
+
+    task :release do
+        exec(make_build_command(:release))
+    end
+
+end
+
+
+def make_build_command(debug)
+    @src  = " "
+    @pkgs = " "
+    cmd = ""
+
+    SOURCE.each do |file|
+        @src << Dir.glob(file).join(" ")
+    end
+
+    PKGS.each do |pkg|
+        @pkgs << "--pkg #{pkg} "
+    end
+
+    if not Dir.exist?(BUILD_DIR) then
+        Dir.mkdir(BUILD_DIR)
+    end
+
+    cmd = PKG_CONFIG
+
+    if(debug == :debug) then
+        cmd << " " << CC_DEBUG << @pkgs << @src
+    else
+        cmd <<  " " << CC_RELEASE << @pkgs << @src
+    end
+    
+    return cmd
+
+end
+
+
+def delete_temp_files()
 
     # Delete backup files left by
     # some editors.
@@ -57,25 +105,6 @@ task :clean do
     end
     Dir.glob("./**/**/*.o", File::FNM_DOTMATCH).each do |f|
         File.unlink(f)
-    end
-end
-
-namespace :build do
-    task :debug do
-
-        @src  = " "
-        @pkgs = " "
-        SOURCE.each do |file|
-            @src << Dir.glob(file).join(" ")
-        end
-        PKGS.each do |pkg|
-            @pkgs << "--pkg #{pkg} "
-        end
-        if not Dir.exist?(BUILD_DIR) then
-            Dir.mkdir(BUILD_DIR)
-        end
-        cmd = PKG_CONFIG + " " + CC_DEBUG << @pkgs << @src
-        puts cmd; exec( cmd);
     end
 
 end
