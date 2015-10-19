@@ -1,7 +1,5 @@
 namespace Collector.Core.Networking {
 
-    using Gee;
-
     public class Client {
 
         private string[] _relays;

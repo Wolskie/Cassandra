@@ -11,7 +11,7 @@ namespace Collector.Settings {
         public static string USERNAME = "client_username";
         public static string PASSWORD = "ahY7^4sCd0(922ssDDsss)a";
 
-        public static void init() {
+        public static void initialize() {
             new Config();
         }
 

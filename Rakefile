@@ -5,8 +5,9 @@ APP_NAME  = "Cassandra"
 COMPILER  = "valac"
 
 DEBUG     = "--debug"
-RELEASE   = "--disable-assert -v --Xcc=-O3"
-CFLAGS    = "--thread -v"
+RELEASE   = "--disable-assert -v -X -s"
+CFLAGS    = "--thread -v "
+
 
 CC_DEBUG   = "#{COMPILER} #{DEBUG}   #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "
 CC_RELEASE = "#{COMPILER} #{RELEASE} #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "
@@ -16,11 +17,15 @@ CC_RELEASE = "#{COMPILER} #{RELEASE} #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "
 # line as --pkg <name
 #
 PKGS      = %w[
-    gee-1.0
     libsoup-2.4
     json-glib-1.0
-    sqlite3
 ]
+
+PKG_CONFIG = "PKG_CONFIG='pkg-config --libs --cflags libsoup-2.4 json-glib-1.0'"
+
+# Other packages might need
+# gee-1.0
+# sqlite3
 
 SOURCE    = %w[
    Collector/**/**/*.vala
@@ -50,6 +55,9 @@ task :clean do
     Dir.glob("./**/**/*.c", File::FNM_DOTMATCH).each do |f|
         File.unlink(f)
     end
+    Dir.glob("./**/**/*.o", File::FNM_DOTMATCH).each do |f|
+        File.unlink(f)
+    end
 end
 
 namespace :build do
@@ -57,27 +65,17 @@ namespace :build do
 
         @src  = " "
         @pkgs = " "
-
         SOURCE.each do |file|
             @src << Dir.glob(file).join(" ")
         end
-
         PKGS.each do |pkg|
             @pkgs << "--pkg #{pkg} "
         end
-
         if not Dir.exist?(BUILD_DIR) then
             Dir.mkdir(BUILD_DIR)
         end
-
-         cmd = CC_DEBUG << @pkgs << @src
-
-         puts cmd; exec cmd
-
-    end
-
-    task :release do
-        abort("Not ready")
+        cmd = PKG_CONFIG + " " + CC_DEBUG << @pkgs << @src
+        puts cmd; exec( cmd);
     end
 
 end

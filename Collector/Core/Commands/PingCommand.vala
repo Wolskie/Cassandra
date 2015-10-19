@@ -5,19 +5,21 @@ namespace Collector.Core.Commands {
 
     using Soup;
     using Json;
-    using Gee;
 
     class PingCommand : Command {
 
-        public string relay   { get; set; }
-        public bool   success { get; set; default=false; }
-
-        private JsonRPCClient client;
+        public string relay    { get; set; }
+        public bool   success  { get; set; default=false; }
 
         public PingCommand(string relay) {
-            this.relay  = relay;
-            this.client = new JsonRPCClient(this.relay);
-            this.client.authenticate(Config.USERNAME, Config.PASSWORD);
+            initialize(relay);
+
+            // Set this.relay so we can access
+            // relay here since this ping command
+            // main objective is to talk to the relay,
+            // other commands may not need this.
+
+            this.relay = relay;
         }
 
         /**
