@@ -2,7 +2,7 @@ namespace Collector.Settings {
 
     public class Config {
 
-        public static double VERSION  = 0.0;
+        public static string VERSION  = "0.0-dev";
         public static bool   DEBUG    = true;
 
         public static string DEFAULT_RELAY = "127.0.0.1:9292";

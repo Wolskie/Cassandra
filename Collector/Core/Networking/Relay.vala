@@ -18,10 +18,7 @@ namespace Collector.Core.Networking.Relay {
         }
 
         public bool is_alive() {
-            PingCommand query = new PingCommand(this.endpoint);
-            query.execute();
-
-            return query.success;
+            return false;
         }
 
     }
@@ -39,18 +36,7 @@ namespace Collector.Core.Networking.Relay {
          * @param relay the relay to add
          */
         public static bool add(string relay) {
-
-            PingCommand status_check = new PingCommand(relay);
-            status_check.execute();
-
-            if(status_check.success == true) {
-                stdout.puts(@"RelayConroller: add(): Added relay '$relay'\n");
-                relays.add(relay);
-            } else {
-                stdout.puts(@"RelayConroller: add(): '$relay' did not respond\n");
-            }
-
-            return status_check.success;
+            return false;
         }
 
     }

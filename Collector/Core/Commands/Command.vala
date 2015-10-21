@@ -1,6 +1,6 @@
 
 using Collector.Settings;
-using Collector.Core.Networking.RPCClient;
+using Collector.Core.Networking.SocketRPC;
 
 namespace Collector.Core.Commands {
 
@@ -12,13 +12,12 @@ namespace Collector.Core.Commands {
             get; set; default=false;
         }
 
-        protected JsonRPCClient client {
+        protected SocketRPC connection {
             get; set;
         }
 
-        protected void initialize(string relay) {
-            this.client = new JsonRPCClient(relay);
-            this.client.authenticate(Config.USERNAME, Config.PASSWORD);
+        protected void initialize(SocketRPC connection) {
+            this.connection = connection;
         }
 
         public abstract void handle_response(Json.Object result);
