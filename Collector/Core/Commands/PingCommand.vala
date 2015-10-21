@@ -1,5 +1,5 @@
 using Collector.Settings;
-using Collector.Core.Networking.SocketRPC;
+using Collector.Core.Networking.TCPClient;
 
 namespace Collector.Core.Commands {
 
@@ -11,7 +11,7 @@ namespace Collector.Core.Commands {
         public string relay    { get; set; }
         public bool   success  { get; set; default=false; }
 
-        public PingCommand(SocketRPC connection, string relay) {
+        public PingCommand(TCPClient connection, string relay) {
             initialize(connection);
 
             // Set this.relay so we can access
@@ -41,8 +41,8 @@ namespace Collector.Core.Commands {
         }
 
         public override void execute() {
-            Json.Object response = connection.request("ping", {});
-            handle_response(response);
+            // Json.Object response = client.request("ping", {});
+            // handle_response(response);
         }
     }
 }

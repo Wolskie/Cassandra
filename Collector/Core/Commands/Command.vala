@@ -1,6 +1,6 @@
 
 using Collector.Settings;
-using Collector.Core.Networking.SocketRPC;
+using Collector.Core.Networking.TCPClient;
 
 namespace Collector.Core.Commands {
 
@@ -12,12 +12,12 @@ namespace Collector.Core.Commands {
             get; set; default=false;
         }
 
-        protected SocketRPC connection {
+        protected TCPClient client {
             get; set;
         }
 
-        protected void initialize(SocketRPC connection) {
-            this.connection = connection;
+        protected void initialize(TCPClient client) {
+            this.client = client;
         }
 
         public abstract void handle_response(Json.Object result);
