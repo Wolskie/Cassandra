@@ -22,7 +22,8 @@ Ask the relay for a list of other relays it knows about.
 ### Instructions
 
 **uninstall()**
-Uninstall Cassandra and or Bianca from the system if they
+Uninstallplit
+Cassandra and or Bianca from the system if they
 are installed, this will not remove collected data from the database.
 
 **upgrade()**

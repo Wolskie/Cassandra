@@ -29,7 +29,7 @@ namespace Collector.Core.Networking.RPCClient {
 
         /**
          * build_json
-         * 
+         *
          * Build jsonrpc json string
          *
          * @param method        method to use
@@ -46,14 +46,14 @@ namespace Collector.Core.Networking.RPCClient {
             Json.Builder builder = new Json.Builder();
 
             builder.begin_object();
-            builder.set_member_name("jsonrpc");
-            builder.add_string_value("2.0");
+            builder.set_member_name("cassandra");
+            builder.add_string_value("0.0");
 
             builder.set_member_name("method");
             builder.add_string_value(method);
 
 
-            if (parameters != null) { 
+            if (parameters != null) {
 
                 builder.set_member_name("params");
                 builder.begin_array();
@@ -161,10 +161,10 @@ namespace Collector.Core.Networking.RPCClient {
             }
 
             return parse_json(response);
-            
+
         }
 
-        
+
 
         /**
          * JsonRPCClient

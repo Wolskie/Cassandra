@@ -19,12 +19,13 @@ CC_RELEASE = "#{COMPILER} #{RELEASE} #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "
 PKGS      = %w[
     libsoup-2.4
     json-glib-1.0
+    gio-2.0
+    gee-1.0
 ]
 
 PKG_CONFIG = "PKG_CONFIG='pkg-config --libs --cflags libsoup-2.4 json-glib-1.0'"
 
 # Other packages might need
-# gee-1.0
 # sqlite3
 
 SOURCE    = %w[
