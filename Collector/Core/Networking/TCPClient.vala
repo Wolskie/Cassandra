@@ -23,7 +23,7 @@ namespace Collector.Core.Networking.TCPClient {
 
         private InetAddress address;
         private SocketClient client;
-        private SocketConnection connection;
+        private TcpConnection connection;
 
 
         public TCPClient() {
@@ -58,7 +58,7 @@ namespace Collector.Core.Networking.TCPClient {
             InetSocketAddress socket = new InetSocketAddress(address, (uint16)port);
 
             try {
-                connection = client.connect(socket, null);
+                connection = (TcpConnection)client.connect(socket, null);
                 if(!connection.closed) {
                     if(Config.DEBUG) {
                         connected = true;
@@ -80,8 +80,8 @@ namespace Collector.Core.Networking.TCPClient {
                         uint8 byte = input.read_byte(null);
                         message += ((unichar)byte).to_string();
 
-                        if(message.has_suffix("\r\n\r\n")) {
-                            on_data_received(message.strip());
+                        if(message.has_suffix("\n")) {
+                            on_data_received(message));
                             message = "";
                         }
 
