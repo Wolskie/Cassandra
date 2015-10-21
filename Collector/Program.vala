@@ -9,14 +9,8 @@ void dispatch(string a) {
     a = "";
 }
 
-void callback_a(uint8 byte) {
-    string test = ((unichar)byte).to_string();
-    a = a + test;
-
-    if((a.index_of("\r\n") - a.length) < 0) {
-        dispatch(a);
-    }
-
+void callback_a(string data) {
+    stdout.puts(@"data='$data'");
 }
 
 static int main(string[] args) {
@@ -26,7 +20,7 @@ static int main(string[] args) {
     client.connect("127.0.0.1", 9293);
 
 
-    client.sig_data_received.connect(callback_a);
+    client.on_data_received.connect(callback_a);
 
 
     while(true) {
