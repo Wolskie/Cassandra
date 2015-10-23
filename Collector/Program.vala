@@ -4,13 +4,9 @@ using Collector.Core.Networking.TCPClient;
 using Collector.Core.Networking.Relay;
 
 
-void dispatch(string a) {
-    stdout.puts(a);
-    a = "";
-}
-
 void callback_a(string data) {
-    stdout.puts(@"data='$data'");
+    string test = data.strip();
+    stdout.puts(@"data='$test'");
 }
 
 static int main(string[] args) {
@@ -21,11 +17,10 @@ static int main(string[] args) {
 
 
     client.on_data_received.connect(callback_a);
+    client.write_string("test HELLO HELLO");
 
+    stdin.read_line();
 
-    while(true) {
-
-    }
     return 0;
 
 }

@@ -4,7 +4,7 @@ BUILD_DIR = "./build"
 APP_NAME  = "Cassandra"
 COMPILER  = "valac"
 
-DEBUG     = "--debug"
+DEBUG     = "--debug -D DEBUG"
 RELEASE   = "--disable-assert -v -X -s -X -O3"
 CFLAGS    = "--thread -v --target-glib 2.32"
 

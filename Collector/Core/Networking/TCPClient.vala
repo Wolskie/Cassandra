@@ -9,6 +9,7 @@ namespace Collector.Core.Networking.TCPClient {
     public class TCPClient : GLib.Object {
 
         public signal void on_data_received(string data);
+        public signal void on_client_connect();
         public signal void on_client_disconect();
 
         private int port {
@@ -16,7 +17,7 @@ namespace Collector.Core.Networking.TCPClient {
             default = 9293;
         }
 
-        private bool connected {
+        public bool connected {
             get; set;
             default = false;
         }
@@ -27,9 +28,9 @@ namespace Collector.Core.Networking.TCPClient {
 
 
         public TCPClient() {
-            if(Config.DEBUG) {
+            #if DEBUG
                 stdout.puts("TCPClient(): New client.\n");
-            }
+            #endif
         }
 
         public void connect(string ip_address, int port) {
@@ -38,10 +39,10 @@ namespace Collector.Core.Networking.TCPClient {
             address = new InetAddress.from_string(ip_address);
             client = new SocketClient();
 
-            if(Config.DEBUG) {
+            #if DEBUG
                 stdout.puts("TCPClient: connect(): Attempting connection to " +
                         ip_address + @":$port...\n");
-            }
+            #endif
 
             try {
                 process_request();
@@ -53,6 +54,25 @@ namespace Collector.Core.Networking.TCPClient {
 
         }
 
+        public void write_string(string message) {
+            if(!connected) {
+                #if DEBUG
+                    stdout.puts("TCPClient: write_string(): Not connected.\n");
+                #endif
+
+                return;
+            }
+
+            try {
+                connection.output_stream.write(message.data, null);
+            } catch (GLib.IOError e) {
+                #if DEBUG
+                    stdout.puts("TCPClient: write_string(): Failed.\n");
+                #endif
+                disconnect();
+            }
+        }
+
         private void process_request() throws Error {
 
             InetSocketAddress socket = new InetSocketAddress(address, (uint16)port);
@@ -60,16 +80,23 @@ namespace Collector.Core.Networking.TCPClient {
             try {
                 connection = (TcpConnection)client.connect(socket, null);
                 if(!connection.closed) {
-                    if(Config.DEBUG) {
-                        connected = true;
+                    connected = true;
+                    #if DEBUG
                         stdout.puts("TCPClient: process_request(): Connected.\n");
-                    }
+                    #endif
                 }
             } catch(GLib.Error e) {
                 return;
             }
 
             DataInputStream input = new DataInputStream(connection.input_stream);
+
+            if(!Thread.supported()) {
+                #if DEBUG
+                    stdout.puts("TCPClient: process_request(): No thread support.\n");
+                #endif
+                return;
+            }
 
             ThreadFunc<void*> run = () => {
 
@@ -80,8 +107,8 @@ namespace Collector.Core.Networking.TCPClient {
                         uint8 byte = input.read_byte(null);
                         message += ((unichar)byte).to_string();
 
-                        if(message.has_suffix("\n")) {
-                            on_data_received(message));
+                        if(message.has_suffix("\r\n\r\n")) {
+                            on_data_received(message);
                             message = "";
                         }
 
@@ -101,10 +128,9 @@ namespace Collector.Core.Networking.TCPClient {
         public void disconnect() {
             if(!connected) {
                 try {
-
-                    if(Config.DEBUG) {
+                    #if DEBUG
                         stdout.puts("TCPClient: disconnect(): Disconnecting.\n");
-                    }
+                    #endif
 
                     connection.socket.close();
                     connection.close();
@@ -115,10 +141,9 @@ namespace Collector.Core.Networking.TCPClient {
                     client.dispose();
 
                 } catch(GLib.Error e) {
-
-                    if(Config.DEBUG) {
+                    #if DEBUG
                         stdout.puts("TCPClient: disconnect(): Not connected.\n");
-                    }
+                    #endif
                 }
             }
         }
