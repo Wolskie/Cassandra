@@ -48,7 +48,7 @@ namespace Collector.Utils.JSON {
                 builder.end_array();
             }
 
-            builder.set_member_name("id");
+            builder.set_member_name("request_id");
             builder.add_int_value(request_id);
             builder.end_object();
 

@@ -3,7 +3,6 @@ using Collector.Core.Commands;
 using Collector.Core.Networking.TCPClient;
 using Collector.Core.Networking.Relay;
 
-
 void callback_a(string data) {
     string test = data.strip();
     stdout.puts(@"data='$test'");
@@ -18,6 +17,10 @@ static int main(string[] args) {
 
     client.on_data_received.connect(callback_a);
     client.write_string("test HELLO HELLO");
+
+    GetRelaysCommand r = new GetRelaysCommand(client);
+    r.execute();
+
 
     stdin.read_line();
 

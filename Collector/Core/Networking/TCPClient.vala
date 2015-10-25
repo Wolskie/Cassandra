@@ -112,7 +112,6 @@ namespace Collector.Core.Networking.TCPClient {
                             message = "";
                         }
 
-
                     } catch(GLib.Error e) {
                         disconnect();
                         return null;
@@ -122,7 +121,6 @@ namespace Collector.Core.Networking.TCPClient {
             };
 
             new Thread<void*>("readThread", run);
-
         }
 
         public void disconnect() {
@@ -147,7 +145,5 @@ namespace Collector.Core.Networking.TCPClient {
                 }
             }
         }
-
     }
-
 }
