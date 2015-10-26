@@ -45,7 +45,7 @@ namespace Collector.Core.Networking.TCPClient {
             #endif
 
             try {
-                process_request();
+                process_request.begin();
             } catch(Error e) {
                 if(Config.DEBUG) {
                     stdout.puts("TCPClient: connect(): Failed.\n");
@@ -73,7 +73,7 @@ namespace Collector.Core.Networking.TCPClient {
             }
         }
 
-        private void process_request() throws Error {
+        private async void process_request() throws ThreadError {
 
             InetSocketAddress socket = new InetSocketAddress(address, (uint16)port);
 
@@ -120,7 +120,7 @@ namespace Collector.Core.Networking.TCPClient {
                 return null;
             };
 
-            new Thread<void*>("readThread", run);
+            Thread.create<void*>(run, false);
         }
 
         public void disconnect() {

@@ -6,7 +6,7 @@ COMPILER  = "valac"
 
 DEBUG     = "--debug -D DEBUG"
 RELEASE   = "--disable-assert -v -X -s -X -O3"
-CFLAGS    = "--thread -v --target-glib 2.32"
+CFLAGS    = "--thread -v"
 
 
 CC_DEBUG   = "#{COMPILER} #{DEBUG}   #{CFLAGS} -o #{BUILD_DIR}/#{APP_NAME} "

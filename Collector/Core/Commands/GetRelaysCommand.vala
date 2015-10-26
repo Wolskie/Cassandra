@@ -16,12 +16,14 @@ namespace Collector.Core.Commands {
             initialize(connection);
         }
 
-        public override void handle_response(Json.Object result) {
-            stdout.puts("got result");
+        public async void handle_response(string data) {
+            stdout.puts("got response!");
         }
 
-        public override void execute() {
-            this.on_message_received.connect(handle_response);
+        public async override void execute() {
+            string request = JsonUtils.build_json_string("get_relays", 0, {});
+            client.on_data_received.connect(handle_response);
+            client.write_string(request);
         }
     }
 }
